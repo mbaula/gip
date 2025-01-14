@@ -1,6 +1,6 @@
 # Notes for making gip (git in python)
 
-### Repository object
+### Creating repositories: init
 - Almost everytime we run a git command we're trying to do something to a repository, create it, read from it or modify it
 - A git repo is made of two things, a `work tree` where files in version control live and a `git directory` where Git stores its own data. Most cases the worktree is a regular director and git directory is a child directory of the worktree called `.git`
 
@@ -30,3 +30,8 @@ def repo_path(repo, *path):
     - `repositoryformatversion = 0` 0 is initial format, 1 the same with extensions, if > 1 git will panic
     - `filemode = false` disable tracking of file modes (permissions) changes in the work tree
     - `bare = false` indicate the repo has a worktree. git supports optional worktree which indicates the location of the worktree
+
+- `repo_find()` helps find the root of the current repo. This will be used a lot since almost all Git functions work on existing repos (except init). Sometimes the root is the current dir, or it could be a parent
+- For example your repository’s root may be in `~/Documents/MyProject`, but you may currently be working in `~/Documents/MyProject/src/tui/frames/mainview/`
+- repo_find will look for that root starting at current dir recursing back to `/`
+- To identify a path as a repo, it will for the presence of .git directory
