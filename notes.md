@@ -35,3 +35,23 @@ def repo_path(repo, *path):
 - For example your repository’s root may be in `~/Documents/MyProject`, but you may currently be working in `~/Documents/MyProject/src/tui/frames/mainview/`
 - repo_find will look for that root starting at current dir recursing back to `/`
 - To identify a path as a repo, it will for the presence of .git directory
+
+### What are objects?
+- Let's implement `git hash-object` and `git cat-file`
+- `hash-object` converts an existing file into a git object and `cat-file` prints an existing object to the standard output.
+- Git is a "content-addressed filesystem". Names of files stored by git are mathematically derived from the contents. If a single byte, changes, its internal name also changes. You dont *modify* a file in git, but you create a new file in a different location.
+- Objects are just that: files in the git repo, whose paths are determined by their contents.
+- Git uses objects to store quite a lot of things, the files it keeps in version control (source code). Commits are objects, so are tags. Almost everything in Git is stored as an object.
+- The path where git stores objects is computed by calculating the SHA-1 hash. Git renders the hash as lowercase hexadecimal and splits it into two parts:
+    - The first two characters
+    - The rest
+    - The first part is a directory name, the rest as a filename. Git's method creates 256 possible intermediate directories
+- An object starts with a header that specifies its type:
+blob, commit, tag or tree. This header is followed by ASCII space (0x20) then the size of the object in bytes as an ASCII number, then null (0x00), then the contents of the object. The first 48 bytes of a commit object could look like:
+```
+00000000  63 6f 6d 6d 69 74 20 31  30 38 36 00 74 72 65 65  |commit 1086.tree|
+00000010  20 32 39 66 66 31 36 63  39 63 31 34 65 32 36 35  | 29ff16c9c14e265|
+00000020  32 62 32 32 66 38 62 37  38 62 62 30 38 61 35 61  |2b22f8b78bb08a5a|
+```
+- In the first line, we see the type header, space, size in ASCII and the null separator. The last four bytes on the first line are the beginning of the object's contents
+- The objects (headers and contents) are stored compressed with `zlib`
