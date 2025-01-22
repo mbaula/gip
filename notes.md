@@ -55,3 +55,7 @@ blob, commit, tag or tree. This header is followed by ASCII space (0x20) then th
 ```
 - In the first line, we see the type header, space, size in ASCII and the null separator. The last four bytes on the first line are the beginning of the object's contents
 - The objects (headers and contents) are stored compressed with `zlib`
+
+### A generic object object
+- Objects can be multiple types, but they all share same storage/retrieval mechanism and same header format. We need to abstract common features
+- Create a generic `GitObject` with two unimplemented methods: `serialize()` and `deserialize()` and a default `init()`

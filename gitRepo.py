@@ -28,6 +28,30 @@ class GitRepository(object):
             vers = int(self.conf.get("core", "repositoryformatversion"))
             if vers != 0:
                 raise Exception("Unsupported repositoryformatversion: {vers}")
+            
+class GitObject (object):
+
+    def __init__(self, data=None):
+        if data != None:
+            self.deserialize(data)
+        else:
+            self.init()
+
+    def serialize(self, repo):
+        """
+        This function must be implemented by subclasses.
+
+        It must read the object's contents from self.data, a byte string, and
+        do whatever it takes to convert it into a meaningful representation.
+        What exactly that means depend on each subclass.
+        """
+        raise Exception("Unimplemented!")
+
+    def deserialize(self, data):
+        raise Exception("Unimplemented!")
+
+    def init(self):
+        pass 
 
 def repo_path(repo, *path):
     """Compute path under repo's gitdir"""
